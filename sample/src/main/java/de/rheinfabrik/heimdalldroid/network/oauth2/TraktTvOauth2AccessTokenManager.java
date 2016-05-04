@@ -7,7 +7,6 @@ import de.rheinfabrik.heimdall.OAuth2AccessToken;
 import de.rheinfabrik.heimdall.OAuth2AccessTokenManager;
 import de.rheinfabrik.heimdall.OAuth2AccessTokenStorage;
 import de.rheinfabrik.heimdall.extras.SharedPreferencesOAuth2AccessTokenStorage;
-import de.rheinfabrik.heimdalldroid.network.TraktTvAPIConfiguration;
 import de.rheinfabrik.heimdalldroid.network.TraktTvApiFactory;
 import de.rheinfabrik.heimdalldroid.network.models.RevokeAccessTokenBody;
 import rx.Single;
@@ -47,6 +46,15 @@ public final class TraktTvOauth2AccessTokenManager extends OAuth2AccessTokenMana
      */
     public TraktTvAuthorizationCodeGrant newAuthorizationCodeGrant() {
         TraktTvAuthorizationCodeGrant grant = new TraktTvAuthorizationCodeGrant();
+        grant.clientId = TraktTvAPIConfiguration.CLIENT_ID;
+        grant.clientSecret = TraktTvAPIConfiguration.CLIENT_SECRET;
+        grant.redirectUri = TraktTvAPIConfiguration.REDIRECT_URI;
+
+        return grant;
+    }
+
+    public PasswordOAuth2Grant newAuthorizationPasswordGrant() {
+        PasswordOAuth2Grant grant = new PasswordOAuth2Grant();
         grant.clientId = TraktTvAPIConfiguration.CLIENT_ID;
         grant.clientSecret = TraktTvAPIConfiguration.CLIENT_SECRET;
         grant.redirectUri = TraktTvAPIConfiguration.REDIRECT_URI;

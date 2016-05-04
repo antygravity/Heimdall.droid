@@ -12,10 +12,13 @@ import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import de.rheinfabrik.heimdalldroid.R;
+import de.rheinfabrik.heimdalldroid.network.oauth2.PasswordOAuth2Grant;
 import de.rheinfabrik.heimdalldroid.network.oauth2.TraktTvAuthorizationCodeGrant;
 import de.rheinfabrik.heimdalldroid.network.oauth2.TraktTvOauth2AccessTokenManager;
 import de.rheinfabrik.heimdalldroid.utils.AlertDialogFactory;
+import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Activity used to let the user login with his GitHub credentials.
@@ -53,34 +56,37 @@ public class LoginActivity extends RxAppCompatActivity {
         TraktTvOauth2AccessTokenManager tokenManager = TraktTvOauth2AccessTokenManager.from(this);
 
         // Grab a new grant
-        TraktTvAuthorizationCodeGrant grant = tokenManager.newAuthorizationCodeGrant();
+//        TraktTvAuthorizationCodeGrant grant = tokenManager.newAuthorizationCodeGrant();
+        PasswordOAuth2Grant grant = tokenManager.newAuthorizationPasswordGrant();
 
-        // Listen for the authorization url and load it once needed
-        grant.authorizationUri()
-                .map(Uri::toString)
-                .compose(bindToLifecycle())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(mWebView::loadUrl);
-
-        // Sent loaded website to grant so it can check if we have an access token
-        mWebView.setWebViewClient(new WebViewClient() {
-
-            @Override
-            public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                super.onPageStarted(view, url, favicon);
-
-                grant.onUriLoadedCommand.onNext(Uri.parse(url));
-
-                // Hide redirect page from user
-                if (url.startsWith(grant.redirectUri)) {
-                    mWebView.setVisibility(View.GONE);
-                }
-            }
-        });
+//        // Listen for the authorization url and load it once needed
+//        grant.authorizationUri()
+//                .map(Uri::toString)
+//                .compose(bindToLifecycle())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(mWebView::loadUrl);
+//
+//        // Sent loaded website to grant so it can check if we have an access token
+//        mWebView.setWebViewClient(new WebViewClient() {
+//
+//            @Override
+//            public void onPageStarted(WebView view, String url, Bitmap favicon) {
+//                super.onPageStarted(view, url, favicon);
+//
+//                grant.onUriLoadedCommand.onNext(Uri.parse(url));
+//
+//                // Hide redirect page from user
+//                if (url.startsWith(grant.redirectUri)) {
+//                    mWebView.setVisibility(View.GONE);
+//                }
+//            }
+//        });
 
         // Start authorization and listen for success
         tokenManager.grantNewAccessToken(grant)
                 .toObservable()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .compose(bindToLifecycle())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(x -> handleSuccess(), x -> handleError());
