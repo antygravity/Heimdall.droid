@@ -1,6 +1,5 @@
 package de.rheinfabrik.heimdalldroid.actvities;
 
-import android.database.Observable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -11,10 +10,15 @@ import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
 import butterknife.ButterKnife;
 import butterknife.Bind;
+import de.rheinfabrik.heimdall.OAuth2AccessToken;
 import de.rheinfabrik.heimdalldroid.R;
 import de.rheinfabrik.heimdalldroid.network.oauth2.PasswordOAuth2Grant;
 import de.rheinfabrik.heimdalldroid.network.oauth2.TraktTvOauth2AccessTokenManager;
 import de.rheinfabrik.heimdalldroid.utils.AlertDialogFactory;
+import rx.Observable;
+import rx.Scheduler;
+import rx.Subscriber;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -96,9 +100,9 @@ public class LoginActivity extends RxAppCompatActivity {
 //        });
 
         // Start authorization and listen for success
-        tokenManager.grantNewAccessToken(grant)
-                .toObservable()
-                .subscribeOn(Schedulers.io())
+
+        Observable observable = Observable.create(subscriber -> tokenManager.grantNewAccessToken(grant));
+        observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(x -> handleSuccess(), x -> handleError());
     }
