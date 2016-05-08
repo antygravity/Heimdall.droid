@@ -17,8 +17,8 @@ import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
 import java.util.List;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import de.rheinfabrik.heimdalldroid.R;
 import de.rheinfabrik.heimdalldroid.adapter.TraktTvListsRecyclerViewAdapter;
 import de.rheinfabrik.heimdalldroid.network.TraktTvApiFactory;
@@ -43,13 +43,13 @@ public class MainActivity extends RxAppCompatActivity {
 
     // Members
 
-    @InjectView(R.id.recyclerView)
+    @Bind(R.id.recyclerView)
     protected RecyclerView mRecyclerView;
 
-    @InjectView(R.id.toolbar)
+    @Bind(R.id.toolbar)
     protected Toolbar mToolbar;
 
-    @InjectView(R.id.swipeRefreshLayout)
+    @Bind(R.id.swipeRefreshLayout)
     protected SwipeRefreshLayout mSwipeRefreshLayout;
 
     private TraktTvOauth2AccessTokenManager mTokenManager;
@@ -64,7 +64,7 @@ public class MainActivity extends RxAppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Inject views
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
 
         // Setup toolbar
         setSupportActionBar(mToolbar);

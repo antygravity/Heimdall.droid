@@ -20,12 +20,13 @@ public class PasswordOAuth2Grant extends OAuth2ResourceOwnerPasswordCredentialsG
     public String clientId;
     public String redirectUri;
 
-
+    public PasswordOAuth2Grant(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
 
     @Override
     public Single<OAuth2AccessToken> grantNewAccessToken() {
-        username = "antygravity@wp.pl";
-        password = "test123";
 
         AccessTokenPasswordRequestBody body = new AccessTokenPasswordRequestBody(username, password, clientId, redirectUri, clientSecret, GRANT_TYPE);
         return TraktTvApiFactory.newApiService().grantNewAccessToken(body);

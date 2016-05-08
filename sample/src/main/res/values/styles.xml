@@ -8,7 +8,7 @@
         <!-- Colors -->
         <item name="colorPrimary">@color/red_orange</item>
         <item name="colorPrimaryDark">@color/persian_red</item>
-        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorPrimary">@android:color/black</item>
 
     </style>
 
