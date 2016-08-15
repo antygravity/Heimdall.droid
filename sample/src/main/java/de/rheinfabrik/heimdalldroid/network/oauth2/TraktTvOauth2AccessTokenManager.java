@@ -9,7 +9,7 @@ import de.rheinfabrik.heimdall.OAuth2AccessTokenStorage;
 import de.rheinfabrik.heimdall.extras.SharedPreferencesOAuth2AccessTokenStorage;
 import de.rheinfabrik.heimdalldroid.network.TraktTvApiFactory;
 import de.rheinfabrik.heimdalldroid.network.models.RevokeAccessTokenBody;
-import rx.Single;
+import rx.Observable;
 
 /**
  * Token manger used to handle all your access token needs with the TraktTv API (http://docs.trakt.apiary.io/#).
@@ -65,7 +65,7 @@ public final class TraktTvOauth2AccessTokenManager extends OAuth2AccessTokenMana
     /**
      * Returns a valid authorization header string using a preconfigured TraktTvRefreshAccessTokenGrant.
      */
-    public Single<String> getValidAccessToken() {
+    public Observable<String> getValidAccessToken() {
         TraktTvRefreshAccessTokenGrant grant = new TraktTvRefreshAccessTokenGrant();
         grant.clientId = TraktTvAPIConfiguration.CLIENT_ID;
         grant.clientSecret = TraktTvAPIConfiguration.CLIENT_SECRET;
@@ -77,15 +77,13 @@ public final class TraktTvOauth2AccessTokenManager extends OAuth2AccessTokenMana
     /**
      * Logs out the user if he is logged in.
      */
-    public Single<Void> logout() {
+    public Observable<Void> logout() {
         return getStorage().getStoredAccessToken()
-                .toObservable()
                 .filter(token -> token != null)
                 .concatMap(accessToken -> {
                     RevokeAccessTokenBody body = new RevokeAccessTokenBody(accessToken.accessToken);
                     return TraktTvApiFactory.newApiService().revokeAccessToken(body);
                 })
-                .doOnNext(x -> getStorage().removeAccessToken())
-                .toSingle();
+                .doOnNext(x -> getStorage().removeAccessToken());
     }
 }

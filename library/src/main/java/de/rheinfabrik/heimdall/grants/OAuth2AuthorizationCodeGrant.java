@@ -4,7 +4,6 @@ import android.net.Uri;
 
 import de.rheinfabrik.heimdall.OAuth2AccessToken;
 import rx.Observable;
-import rx.Single;
 import rx.subjects.BehaviorSubject;
 import rx.subjects.PublishSubject;
 
@@ -92,7 +91,7 @@ public abstract class OAuth2AuthorizationCodeGrant<TAccessToken extends OAuth2Ac
     // OAuth2AccessToken
 
     @Override
-    public Single<TAccessToken> grantNewAccessToken() {
+    public Observable<TAccessToken> grantNewAccessToken() {
         mAuthorizationUriSubject.onNext(buildAuthorizationUri());
 
         return onUriLoadedCommand
@@ -100,7 +99,6 @@ public abstract class OAuth2AuthorizationCodeGrant<TAccessToken extends OAuth2Ac
                 .filter(code -> code != null)
                 .take(1)
                 .retry()
-                .concatMap(this::exchangeTokenUsingCode)
-                .toSingle();
+                .concatMap(this::exchangeTokenUsingCode);
     }
 }

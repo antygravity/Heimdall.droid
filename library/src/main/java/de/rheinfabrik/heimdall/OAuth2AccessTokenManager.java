@@ -4,9 +4,9 @@ import java.util.Calendar;
 
 import de.rheinfabrik.heimdall.grants.OAuth2Grant;
 import de.rheinfabrik.heimdall.grants.OAuth2RefreshAccessTokenGrant;
-import rx.Single;
+import rx.Observable;
 
-import static rx.Single.error;
+import static rx.Observable.error;
 
 /**
  * The all-seeing and all-hearing guardian sentry of your application who
@@ -54,7 +54,7 @@ public class OAuth2AccessTokenManager<TAccessToken extends OAuth2AccessToken> {
      * @param grant A class implementing the OAuth2Grant interface.
      * @return - An observable emitting the granted access token.
      */
-    public Single<TAccessToken> grantNewAccessToken(OAuth2Grant<TAccessToken> grant) {
+    public Observable<TAccessToken> grantNewAccessToken(OAuth2Grant<TAccessToken> grant) {
         return grantNewAccessToken(grant, Calendar.getInstance());
     }
 
@@ -65,14 +65,14 @@ public class OAuth2AccessTokenManager<TAccessToken extends OAuth2AccessToken> {
      * @param calendar A calendar instance used to calculate the expiration date of the token.
      * @return - An observable emitting the granted access token.
      */
-    public Single<TAccessToken> grantNewAccessToken(OAuth2Grant<TAccessToken> grant, Calendar calendar) {
+    public Observable<TAccessToken> grantNewAccessToken(OAuth2Grant<TAccessToken> grant, Calendar calendar) {
         if (grant == null) {
             throw new IllegalArgumentException("Grant MUST NOT be null.");
         }
 
         return grant
                 .grantNewAccessToken()
-                .doOnSuccess(accessToken -> {
+                .doOnNext(accessToken -> {
                     if (accessToken.expiresIn != null) {
                         Calendar expirationDate = (Calendar) calendar.clone();
                         expirationDate.add(Calendar.SECOND, accessToken.expiresIn);
@@ -93,7 +93,7 @@ public class OAuth2AccessTokenManager<TAccessToken extends OAuth2AccessToken> {
      * @param refreshAccessTokenGrant The refresh grant that will be used if the access token is expired.
      * @return - An Observable emitting an unexpired access token.
      */
-    public Single<TAccessToken> getValidAccessToken(final OAuth2RefreshAccessTokenGrant<TAccessToken> refreshAccessTokenGrant) {
+    public Observable<TAccessToken> getValidAccessToken(final OAuth2RefreshAccessTokenGrant<TAccessToken> refreshAccessTokenGrant) {
         if (refreshAccessTokenGrant == null) {
             throw new IllegalArgumentException("RefreshAccessTokenGrant MUST NOT be null.");
         }
@@ -107,7 +107,7 @@ public class OAuth2AccessTokenManager<TAccessToken extends OAuth2AccessToken> {
 
                         return grantNewAccessToken(refreshAccessTokenGrant);
                     } else {
-                        return Single.just(accessToken);
+                        return Observable.just(accessToken);
                     }
                 });
     }

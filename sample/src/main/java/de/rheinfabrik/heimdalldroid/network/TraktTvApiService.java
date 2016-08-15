@@ -13,7 +13,6 @@ import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
 import rx.Observable;
-import rx.Single;
 
 /**
  * Interface for communicating to the TraktTv API (http://docs.trakt.apiary.io/#).
@@ -23,7 +22,7 @@ public interface TraktTvApiService {
     // POST
 
     @POST("oauth/v2/token")
-    Single<OAuth2AccessToken> grantNewAccessToken(@Body AccessTokenPasswordRequestBody body);
+    Observable<OAuth2AccessToken> grantNewAccessToken(@Body AccessTokenPasswordRequestBody body);
 
     @POST("oauth/token")
     Observable<OAuth2AccessToken> grantNewAccessToken(@Body AccessTokenRequestBody body);

@@ -127,7 +127,7 @@ public class MainActivity extends RxAppCompatActivity {
                 .getValidAccessToken()
 
                  /* Load lists */
-                .flatMapObservable(authorizationHeader -> TraktTvApiFactory.newApiService().getLists(authorizationHeader));
+                .flatMap(authorizationHeader -> TraktTvApiFactory.newApiService().getLists(authorizationHeader));
 
         // Bind to lifecycle
         listsObservable
@@ -196,7 +196,6 @@ public class MainActivity extends RxAppCompatActivity {
 
         // Ask token manager to revoke the token
         mTokenManager.logout()
-                .toObservable()
                 .compose(bindToLifecycle())
                 .subscribe(x -> showLogin());
 

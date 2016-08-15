@@ -4,7 +4,7 @@ import de.rheinfabrik.heimdall.OAuth2AccessToken;
 import de.rheinfabrik.heimdall.grants.OAuth2ResourceOwnerPasswordCredentialsGrant;
 import de.rheinfabrik.heimdalldroid.network.TraktTvApiFactory;
 import de.rheinfabrik.heimdalldroid.network.models.AccessTokenPasswordRequestBody;
-import rx.Single;
+import rx.Observable;
 
 /**
  * Created by marcin on 03.05.16.
@@ -24,10 +24,10 @@ public class PasswordOAuth2Grant extends OAuth2ResourceOwnerPasswordCredentialsG
     }
 
     @Override
-    public Single<OAuth2AccessToken> grantNewAccessToken() {
+    public Observable<OAuth2AccessToken> grantNewAccessToken() {
 
         AccessTokenPasswordRequestBody body = new AccessTokenPasswordRequestBody(username, password, clientId, redirectUri, clientSecret, GRANT_TYPE);
-        Single<OAuth2AccessToken> token = TraktTvApiFactory.newApiService().grantNewAccessToken(body);
+        Observable<OAuth2AccessToken> token = TraktTvApiFactory.newApiService().grantNewAccessToken(body);
         return token;
     }
 }

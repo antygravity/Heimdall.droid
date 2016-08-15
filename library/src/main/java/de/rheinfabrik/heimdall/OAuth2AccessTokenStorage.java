@@ -1,5 +1,6 @@
 package de.rheinfabrik.heimdall;
 
+import rx.Observable;
 import rx.Single;
 
 /**
@@ -16,7 +17,7 @@ public interface OAuth2AccessTokenStorage<TAccessToken extends OAuth2AccessToken
      *
      * @return - An Observable emitting the stored access token.
      */
-    Single<TAccessToken> getStoredAccessToken();
+    Observable<TAccessToken> getStoredAccessToken();
 
     /**
      * Stores the given access token.

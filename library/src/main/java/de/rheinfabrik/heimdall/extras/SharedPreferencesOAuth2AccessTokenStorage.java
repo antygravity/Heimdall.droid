@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 
 import de.rheinfabrik.heimdall.OAuth2AccessToken;
 import de.rheinfabrik.heimdall.OAuth2AccessTokenStorage;
+import rx.Observable;
 import rx.Single;
 
 /**
@@ -52,8 +53,8 @@ public class SharedPreferencesOAuth2AccessTokenStorage<TAccessToken extends OAut
 
     @SuppressWarnings("unchecked")
     @Override
-    public Single<TAccessToken> getStoredAccessToken() {
-        return Single
+    public Observable<TAccessToken> getStoredAccessToken() {
+        return Observable
                 .just(mSharedPreferences.getString(ACCESS_TOKEN_PREFERENCES_KEY, null))
                 .map(json -> (TAccessToken) new Gson().fromJson(json, mTokenClass));
     }
