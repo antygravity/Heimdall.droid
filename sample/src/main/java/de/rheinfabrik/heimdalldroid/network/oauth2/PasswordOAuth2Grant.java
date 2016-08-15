@@ -1,7 +1,5 @@
 package de.rheinfabrik.heimdalldroid.network.oauth2;
 
-import android.net.Uri;
-
 import de.rheinfabrik.heimdall.OAuth2AccessToken;
 import de.rheinfabrik.heimdall.grants.OAuth2ResourceOwnerPasswordCredentialsGrant;
 import de.rheinfabrik.heimdalldroid.network.TraktTvApiFactory;
@@ -29,6 +27,7 @@ public class PasswordOAuth2Grant extends OAuth2ResourceOwnerPasswordCredentialsG
     public Single<OAuth2AccessToken> grantNewAccessToken() {
 
         AccessTokenPasswordRequestBody body = new AccessTokenPasswordRequestBody(username, password, clientId, redirectUri, clientSecret, GRANT_TYPE);
-        return TraktTvApiFactory.newApiService().grantNewAccessToken(body);
+        Single<OAuth2AccessToken> token = TraktTvApiFactory.newApiService().grantNewAccessToken(body);
+        return token;
     }
 }

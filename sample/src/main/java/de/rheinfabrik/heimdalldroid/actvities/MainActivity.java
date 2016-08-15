@@ -26,7 +26,6 @@ import de.rheinfabrik.heimdalldroid.network.models.TraktTvList;
 import de.rheinfabrik.heimdalldroid.network.oauth2.TraktTvOauth2AccessTokenManager;
 import de.rheinfabrik.heimdalldroid.utils.AlertDialogFactory;
 import de.rheinfabrik.heimdalldroid.utils.IntentFactory;
-import retrofit.RetrofitError;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -163,16 +162,9 @@ public class MainActivity extends RxAppCompatActivity {
         mSwipeRefreshLayout.setRefreshing(false);
 
         // Clear token and login if 401
-        if (error instanceof RetrofitError) {
-            RetrofitError retrofitError = (RetrofitError) error;
-            if (retrofitError.getResponse().getStatus() == 401) {
-                mTokenManager.getStorage().removeAccessToken();
 
-                refresh();
-            }
-        } else {
             AlertDialogFactory.errorAlertDialog(this).show();
-        }
+
     }
 
     // Update our recycler view

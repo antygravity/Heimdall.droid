@@ -8,10 +8,10 @@ import de.rheinfabrik.heimdalldroid.network.models.AccessTokenRequestBody;
 import de.rheinfabrik.heimdalldroid.network.models.RefreshTokenRequestBody;
 import de.rheinfabrik.heimdalldroid.network.models.RevokeAccessTokenBody;
 import de.rheinfabrik.heimdalldroid.network.models.TraktTvList;
-import retrofit.http.Body;
-import retrofit.http.GET;
-import retrofit.http.Header;
-import retrofit.http.POST;
+import retrofit2.http.Body;
+import retrofit2.http.GET;
+import retrofit2.http.Header;
+import retrofit2.http.POST;
 import rx.Observable;
 import rx.Single;
 
@@ -22,20 +22,20 @@ public interface TraktTvApiService {
 
     // POST
 
-    @POST("/oauth/token")
+    @POST("oauth/v2/token")
     Single<OAuth2AccessToken> grantNewAccessToken(@Body AccessTokenPasswordRequestBody body);
 
-    @POST("/oauth/token")
+    @POST("oauth/token")
     Observable<OAuth2AccessToken> grantNewAccessToken(@Body AccessTokenRequestBody body);
 
-    @POST("/oauth/token")
+    @POST("oauth/token")
     Observable<OAuth2AccessToken> refreshAccessToken(@Body RefreshTokenRequestBody body);
 
-    @POST("/oauth/revoke")
+    @POST("oauth/revoke")
     Observable<Void> revokeAccessToken(@Body RevokeAccessTokenBody body);
 
     // GET
 
-    @GET("/users/me/lists")
+    @GET("users/me/lists")
     Observable<List<TraktTvList>> getLists(@Header("Authorization") String authorizationHeader);
 }

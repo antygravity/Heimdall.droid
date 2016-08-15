@@ -5,7 +5,6 @@ import java.util.Calendar;
 import de.rheinfabrik.heimdall.grants.OAuth2Grant;
 import de.rheinfabrik.heimdall.grants.OAuth2RefreshAccessTokenGrant;
 import rx.Single;
-import rx.functions.Func1;
 
 import static rx.Single.error;
 
@@ -81,7 +80,9 @@ public class OAuth2AccessTokenManager<TAccessToken extends OAuth2AccessToken> {
                     }
 
                     mStorage.storeAccessToken(accessToken);
-                });
+                })
+                .doOnError(throwable ->
+                throwable.printStackTrace());
     }
 
     /**
